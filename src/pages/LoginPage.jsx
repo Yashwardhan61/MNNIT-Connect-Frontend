@@ -5,16 +5,31 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { GraduationCap } from 'lucide-react'
+import api from '@/services/api'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault()
     if (email && password) {
-      localStorage.setItem('user', JSON.stringify({ email }))
+      try{
+        const res = await api.post("/auth/login", {
+          email,
+          password,
+        },{
+  withCredentials: true,
+})
+        console.log("Lofin success:", res.data);
+        localStorage.setItem('user', JSON.stringify({ email }))
+      }catch(error){
+        console.error("Login Failed:", 
+          error.response?.data || error.message
+        );
+        alert("Invalid email or password");
+      }
       navigate('/app/dashboard')
     }
   }

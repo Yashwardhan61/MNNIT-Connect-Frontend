@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { GraduationCap, Loader2, Info, CheckCircle } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import api from '@/services/api'
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -59,17 +60,28 @@ export default function SignupPage() {
       return
     }
 
+    try{
+      const res = await api.post("/auth/signup", formData);
+
+      console.log(res);
+      alert("Registered Successful");
+    }catch(error){
+      console.error("Signup Failed:", 
+          error.response?.data || error.message
+        );
+        alert("Failed to register");
+    }
     // Simulate API call
-    setTimeout(() => {
-      setSuccess(true)
-      localStorage.setItem('user', JSON.stringify({ 
-        name: formData.fullName, 
-        email: formData.email 
-      }))
-      setTimeout(() => {
-        navigate('/app/dashboard')
-      }, 1500)
-    }, 1000)
+    // setTimeout(() => {
+    //   setSuccess(true)
+    //   localStorage.setItem('user', JSON.stringify({ 
+    //     name: formData.fullName, 
+    //     email: formData.email 
+    //   }))
+    //   setTimeout(() => {
+    //     navigate('/app/dashboard')
+    //   }, 1500)
+    // }, 1000)
   }
 
   return (
